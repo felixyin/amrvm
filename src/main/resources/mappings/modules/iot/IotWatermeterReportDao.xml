@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fy.erp.modules.iot.dao.IotWatermeterReportDao">
+
+    <sql id="iotWatermeterReportColumns">
+        a.id AS "id",
+        a.watermeter_num AS "watermeterNum",
+        a.count_cd AS "countCd",
+        a.collect_cd AS "collectCd",
+        a.flow_day AS "flowDay",
+        a.count_cw AS "countCw",
+        a.collect_cw AS "collectCw",
+        a.flow_week AS "flowWeek",
+        a.count_cm AS "countCm",
+        a.collect_cm AS "collectCm",
+        a.flow_month AS "flowMonth",
+        a.count_cq AS "countCq",
+        a.collect_cq AS "collectCq",
+        a.flow_quarter AS "flowQuarter",
+        a.count_cy AS "countCy",
+        a.collect_cy AS "collectCy",
+        a.flow_year AS "flowYear",
+        a.create_by AS "createBy.id",
+        a.create_date AS "createDate",
+        a.update_by AS "updateBy.id",
+        a.update_date AS "updateDate",
+        a.remarks AS "remarks",
+        a.del_flag AS "delFlag"
+    </sql>
+
+    <sql id="iotWatermeterReportJoins">
+    </sql>
+
+    <select id="get" resultType="IotWatermeterReport">
+        SELECT
+        <include refid="iotWatermeterReportColumns"/>
+        FROM iot_watermeter_flow a
+        <include refid="iotWatermeterReportJoins"/>
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="findList" resultType="IotWatermeterReport">
+        SELECT
+        <include refid="iotWatermeterReportColumns"/>
+        FROM iot_watermeter_flow a
+        <include refid="iotWatermeterReportJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+            <if test="watermeterNum != null and watermeterNum != ''">
+                AND a.watermeter_num = #{watermeterNum}
+            </if>
+            <if test="collectCw != null and collectCw != ''">
+                AND a.collect_cw = #{collectCw}
+            </if>
+            <if test="collectCm != null and collectCm != ''">
+                AND a.collect_cm = #{collectCm}
+            </if>
+            <if test="collectCq != null and collectCq != ''">
+                AND a.collect_cq = #{collectCq}
+            </if>
+            <if test="collectCy != null and collectCy != ''">
+                AND a.collect_cy = #{collectCy}
+            </if>
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="findAllList" resultType="IotWatermeterReport">
+        SELECT
+        <include refid="iotWatermeterReportColumns"/>
+        FROM iot_watermeter_flow a
+        <include refid="iotWatermeterReportJoins"/>
+        <where>
+            a.del_flag = #{DEL_FLAG_NORMAL}
+        </where>
+        <choose>
+            <when test="page !=null and page.orderBy != null and page.orderBy != ''">
+                ORDER BY ${page.orderBy}
+            </when>
+            <otherwise>
+                ORDER BY a.update_date DESC
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <insert id="insertSelective">
+        INSERT INTO iot_watermeter_flow
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="watermeter_num != null">
+                watermeter_num,
+            </if>
+            <if test="count_cd != null">
+                count_cd,
+            </if>
+            <if test="collect_cd != null">
+                collect_cd,
+            </if>
+            <if test="flow_day != null">
+                flow_day,
+            </if>
+            <if test="count_cw != null">
+                count_cw,
+            </if>
+            <if test="collect_cw != null">
+                collect_cw,
+            </if>
+            <if test="flow_week != null">
+                flow_week,
+            </if>
+            <if test="count_cm != null">
+                count_cm,
+            </if>
+            <if test="collect_cm != null">
+                collect_cm,
+            </if>
+            <if test="flow_month != null">
+                flow_month,
+            </if>
+            <if test="count_cq != null">
+                count_cq,
+            </if>
+            <if test="collect_cq != null">
+                collect_cq,
+            </if>
+            <if test="flow_quarter != null">
+                flow_quarter,
+            </if>
+            <if test="count_cy != null">
+                count_cy,
+            </if>
+            <if test="collect_cy != null">
+                collect_cy,
+            </if>
+            <if test="flow_year != null">
+                flow_year,
+            </if>
+            <if test="create_by != null">
+                create_by,
+            </if>
+            <if test="create_date != null">
+                create_date,
+            </if>
+            <if test="update_by != null">
+                update_by,
+            </if>
+            <if test="update_date != null">
+                update_date,
+            </if>
+            <if test="remarks != null">
+                remarks,
+            </if>
+            <if test="del_flag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="watermeterNum != null">
+                #{watermeterNum},
+            </if>
+            <if test="countCd != null">
+                #{countCd},
+            </if>
+            <if test="collectCd != null">
+                #{collectCd},
+            </if>
+            <if test="flowDay != null">
+                #{flowDay},
+            </if>
+            <if test="countCw != null">
+                #{countCw},
+            </if>
+            <if test="collectCw != null">
+                #{collectCw},
+            </if>
+            <if test="flowWeek != null">
+                #{flowWeek},
+            </if>
+            <if test="countCm != null">
+                #{countCm},
+            </if>
+            <if test="collectCm != null">
+                #{collectCm},
+            </if>
+            <if test="flowMonth != null">
+                #{flowMonth},
+            </if>
+            <if test="countCq != null">
+                #{countCq},
+            </if>
+            <if test="collectCq != null">
+                #{collectCq},
+            </if>
+            <if test="flowQuarter != null">
+                #{flowQuarter},
+            </if>
+            <if test="countCy != null">
+                #{countCy},
+            </if>
+            <if test="collectCy != null">
+                #{collectCy},
+            </if>
+            <if test="flowYear != null">
+                #{flowYear},
+            </if>
+            <if test="createBy.id != null">
+                #{createBy.id},
+            </if>
+            <if test="createDate != null">
+                #{createDate},
+            </if>
+            <if test="updateBy.id != null">
+                #{updateBy.id},
+            </if>
+            <if test="updateDate != null">
+                #{updateDate},
+            </if>
+            <if test="remarks != null">
+                #{remarks},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSelective">
+        UPDATE iot_watermeter_flow
+        <set>
+            <if test="watermeter_num != null">
+                watermeter_num = #{watermeterNum},
+            </if>
+            <if test="count_cd != null">
+                count_cd = #{countCd},
+            </if>
+            <if test="collect_cd != null">
+                collect_cd = #{collectCd},
+            </if>
+            <if test="flow_day != null">
+                flow_day = #{flowDay},
+            </if>
+            <if test="count_cw != null">
+                count_cw = #{countCw},
+            </if>
+            <if test="collect_cw != null">
+                collect_cw = #{collectCw},
+            </if>
+            <if test="flow_week != null">
+                flow_week = #{flowWeek},
+            </if>
+            <if test="count_cm != null">
+                count_cm = #{countCm},
+            </if>
+            <if test="collect_cm != null">
+                collect_cm = #{collectCm},
+            </if>
+            <if test="flow_month != null">
+                flow_month = #{flowMonth},
+            </if>
+            <if test="count_cq != null">
+                count_cq = #{countCq},
+            </if>
+            <if test="collect_cq != null">
+                collect_cq = #{collectCq},
+            </if>
+            <if test="flow_quarter != null">
+                flow_quarter = #{flowQuarter},
+            </if>
+            <if test="count_cy != null">
+                count_cy = #{countCy},
+            </if>
+            <if test="collect_cy != null">
+                collect_cy = #{collectCy},
+            </if>
+            <if test="flow_year != null">
+                flow_year = #{flowYear},
+            </if>
+            <if test="update_by != null">
+                update_by = #{updateBy.id},
+            </if>
+            <if test="update_date != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="remarks != null">
+                remarks = #{remarks},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <insert id="insert">
+        INSERT INTO iot_watermeter_flow (
+            id,
+            watermeter_num,
+            count_cd,
+            collect_cd,
+            flow_day,
+            count_cw,
+            collect_cw,
+            flow_week,
+            count_cm,
+            collect_cm,
+            flow_month,
+            count_cq,
+            collect_cq,
+            flow_quarter,
+            count_cy,
+            collect_cy,
+            flow_year,
+            create_by,
+            create_date,
+            update_by,
+            update_date,
+            remarks,
+            del_flag
+        ) VALUES (
+            #{id},
+            #{watermeterNum},
+            #{countCd},
+            #{collectCd},
+            #{flowDay},
+            #{countCw},
+            #{collectCw},
+            #{flowWeek},
+            #{countCm},
+            #{collectCm},
+            #{flowMonth},
+            #{countCq},
+            #{collectCq},
+            #{flowQuarter},
+            #{countCy},
+            #{collectCy},
+            #{flowYear},
+            #{createBy.id},
+            #{createDate},
+            #{updateBy.id},
+            #{updateDate},
+            #{remarks},
+            #{delFlag}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE iot_watermeter_flow
+        SET
+            watermeter_num = #{watermeterNum},
+            count_cd       = #{countCd},
+            collect_cd     = #{collectCd},
+            flow_day       = #{flowDay},
+            count_cw       = #{countCw},
+            collect_cw     = #{collectCw},
+            flow_week      = #{flowWeek},
+            count_cm       = #{countCm},
+            collect_cm     = #{collectCm},
+            flow_month     = #{flowMonth},
+            count_cq       = #{countCq},
+            collect_cq     = #{collectCq},
+            flow_quarter   = #{flowQuarter},
+            count_cy       = #{countCy},
+            collect_cy     = #{collectCy},
+            flow_year      = #{flowYear},
+            update_by      = #{updateBy.id},
+            update_date    = #{updateDate},
+            remarks        = #{remarks}
+        WHERE id = #{id}
+    </update>
+
+    <update id="delete">
+        UPDATE iot_watermeter_flow
+        SET
+            del_flag = #{DEL_FLAG_DELETE}
+        WHERE id = #{id}
+    </update>
+
+    <!--  ======================================================================================== -->
+    <select id="findWatermeterReportList" resultType="IotWatermeterReport">
+        SELECT * FROM v_watermeter_all_flow_v1
+        <where>
+            <if test="date != null and date != ''">
+                collect_cd = #{date}
+            </if>
+        </where>
+        ORDER BY watermeter_num ASC, collect_cd DESC
+    </select>
+
+    <delete id="deleteByDate">
+        DELETE FROM iot_watermeter_flow
+        <where>
+            <if test="date != null and date != ''">
+                collect_cd = #{date}
+            </if>
+        </where>
+    </delete>
+
+    <select id="findMaxCountByWatermeter" resultType="string">
+        SELECT MAX(a.count_cd)
+        FROM
+            iot_watermeter_flow a
+        WHERE
+            a.watermeter_num = #{watermeterNumOld}
+    </select>
+
+    <select id="findEchartsData"
+            parameterType="com.fy.erp.modules.iot.entity.IotEchartsParam"
+            resultType="com.fy.erp.modules.iot.entity.IotEchartsDbRow">
+        SELECT
+        iw.${columnStatisticsType} AS legendNameId,
+        iwf.${columnDateNameType} AS dateNamz,
+        SUM( iwf.${columnFlowWeek} ) AS valuz
+        FROM
+        iot_watermeter_flow AS iwf
+        LEFT JOIN iot_watermeter AS iw ON iwf.watermeter_num = iw.watermeter_num
+        <where>
+            iw.${columnStatisticsType} IS NOT NULL
+            AND iw.device_type = 1
+            <choose>
+                <when test="(endTime != null and endTime != '') and (startTime == null or startTime == '')">
+                    AND collect_cd <![CDATA[ <= ]]> #{endTime}
+                </when>
+                <when test="(endTime != null and endTime != '') and (startTime != null and startTime != '')">
+                    AND collect_cd BETWEEN #{startTime} AND #{endTime}
+                </when>
+                <when test="(endTime == null or endTime == '') and (startTime != null and startTime != '')">
+                    AND collect_cd <![CDATA[ >= ]]> #{startTime}
+                </when>
+            </choose>
+        </where>
+        GROUP BY
+        iw.${columnStatisticsType},
+        iwf.${columnDateNameType}
+        ORDER BY
+        iw.${columnStatisticsType},
+        iwf.${columnDateNameType}
+    </select>
+
+    <select id="findMapData" resultType="map">
+        SELECT
+            a.NAME AS name,
+            ISNULL( a.[ VALUE ]- b.[ VALUE ], 0 ) AS [value]
+        FROM
+            (
+        SELECT
+            so.NAME AS NAME,
+            ISNULL( SUM( iwf.flow_year ), 0 ) AS [ VALUE ]
+        FROM
+            sys_office AS so
+            LEFT JOIN ( SELECT * FROM iot_watermeter WHERE device_type = 1 ) AS iw ON so.id = iw.area_id
+            LEFT JOIN ( SELECT * FROM iot_watermeter_flow WHERE collect_cd = ( SELECT MAX( collect_cd ) FROM iot_watermeter_flow ) ) AS iwf ON iw.watermeter_num = iwf.watermeter_num
+        WHERE
+            so.type = 2
+            AND so.del_flag = 0
+        GROUP BY
+            so.NAME
+            ) AS a
+            JOIN (
+        SELECT
+            so.NAME AS NAME,
+            ISNULL( SUM( iwf.flow_year ), 0 ) AS [ VALUE ]
+        FROM
+            sys_office AS so
+            LEFT JOIN ( SELECT * FROM iot_watermeter WHERE device_type = 1 ) AS iw ON so.id = iw.area_id
+            LEFT JOIN ( SELECT * FROM iot_watermeter_flow WHERE collect_cd = '2017-12-30' ) AS iwf ON iw.watermeter_num = iwf.watermeter_num
+        WHERE
+            so.type = 2
+            AND so.del_flag = 0
+        GROUP BY
+            so.NAME
+	) AS b ON a.NAME = b.NAME
+ORDER BY
+	a.NAME COLLATE Chinese_PRC_Stroke_CS_AS_KS_WS DESC
+    </select>
+    <select id="findTopFarmData" resultType="int">
+        SELECT
+        count(so.name)
+        FROM
+        sys_office AS so
+        WHERE
+        so.type  = 2
+        AND so.del_flag = 0
+    </select>
+    <select id="findTopWatermeterData" resultType="int">
+        SELECT
+			count(iw.name)
+        FROM
+            iot_watermeter AS iw
+        WHERE
+            iw.del_flag = 0
+			AND iw.level_type = 3
+			AND iw.device_type = 1
+        GROUP BY
+            iw.level_type
+    </select>
+    <select id="findTopCountFlowData" resultType="int">
+        SELECT
+        ISNULL( SUM ( iwf.flow_year ), 0 ) AS [value]
+        FROM
+        iot_watermeter_flow AS iwf
+        LEFT JOIN iot_watermeter AS iw ON iw.watermeter_num = iwf.watermeter_num
+        WHERE iwf.del_flag = 0 AND iwf.collect_cd = ( SELECT MAX( collect_cd ) FROM iot_watermeter_flow )  AND iw.device_type = 1
+        ORDER BY
+        ISNULL( SUM ( iwf.flow_year ), 0 ) DESC
+    </select>
+    <select id="findTopTodayFlowData" resultType="int">
+        SELECT
+        ISNULL( SUM ( iwf.flow_day ), 0 ) AS [value]
+        FROM
+        iot_watermeter_flow AS iwf
+        LEFT JOIN iot_watermeter AS iw ON iw.watermeter_num = iwf.watermeter_num
+        WHERE iwf.del_flag = 0 AND iwf.collect_cd = ( SELECT MAX( collect_cd ) FROM iot_watermeter_flow )  AND iw.device_type = 1
+        ORDER BY
+        ISNULL( SUM ( iwf.flow_day ), 0 ) DESC
+    </select>
+    <select id="findAreaData" resultType="map">
+        SELECT
+            sd.label AS "name",
+            ISNULL( SUM ( iwf.flow_year ), 0 ) AS [value]
+        FROM
+            iot_watermeter AS iw
+            LEFT JOIN iot_watermeter_flow AS iwf ON iw.watermeter_num = iwf.watermeter_num
+						left join sys_dict as sd on sd.[value] = iw.watermeter_type
+        WHERE
+            iw.del_flag = 0
+            AND iw.device_type = 1
+			AND sd.type = 'enum_watermeter_type'
+            AND iwf.collect_cd = ( SELECT MAX( collect_cd ) FROM iot_watermeter_flow )
+            <if test="farmNameDecode != null and farmNameDecode != ''">
+                AND iw.farm_name= #{farmNameDecode}
+            </if>
+        GROUP BY
+            sd.label
+        ORDER BY
+            ISNULL( SUM ( iwf.flow_year ), 0 ) DESC
+    </select>
+    <select id="findBarData" resultType="map">
+        SELECT
+            iw.name,
+            ISNULL( SUM ( iwf.flow_year ), 0 ) AS [value]
+        FROM
+            iot_watermeter AS iw
+            LEFT JOIN iot_watermeter_flow AS iwf ON iw.watermeter_num = iwf.watermeter_num
+            left join sys_dict as sd on sd.[value] = iw.watermeter_type
+        WHERE
+            iw.del_flag = 0
+            AND iw.device_type = 1
+            AND sd.type = 'enum_watermeter_type'
+            AND iwf.collect_cd = ( SELECT MAX( collect_cd ) FROM iot_watermeter_flow )
+        <if test="watermeterTypeDecode != null and watermeterTypeDecode != ''">
+                AND sd.label= #{watermeterTypeDecode}
+            </if>
+            <if test="farmNameDecode != null and farmNameDecode != ''">
+                AND iw.farm_name= #{farmNameDecode}
+            </if>
+        GROUP BY
+            iw.name
+        HAVING
+            ISNULL( SUM ( iwf.flow_day ), 0 ) != 0
+        ORDER BY
+            ISNULL( SUM ( iwf.flow_day ), 0 ) DESC
+    </select>
+    <select id="findBarLljData" resultType="map">
+        SELECT
+            iw.name,
+            ISNULL( SUM ( iwf.flow_day ), 0 ) AS [value]
+        FROM
+            iot_watermeter AS iw
+            LEFT JOIN iot_watermeter_flow AS iwf ON iw.watermeter_num = iwf.watermeter_num
+            left join sys_dict as sd on sd.[value] = iw.watermeter_type
+        WHERE
+            iw.del_flag = 0
+            AND iw.device_type = 2
+            AND sd.type = 'enum_watermeter_type'
+            AND iwf.collect_cd = ( SELECT MAX( collect_cd ) FROM iot_watermeter_flow )
+        <if test="watermeterTypeDecode != null and watermeterTypeDecode != ''">
+                AND sd.label= #{watermeterTypeDecode}
+            </if>
+            <if test="farmNameDecode != null and farmNameDecode != ''">
+                AND iw.farm_name= #{farmNameDecode}
+            </if>
+        GROUP BY
+            iw.name
+        HAVING
+            ISNULL( SUM ( iwf.flow_day ), 0 ) != 0
+        ORDER BY
+            ISNULL( SUM ( iwf.flow_day ), 0 ) DESC
+    </select>
+
+
+
+</mapper>

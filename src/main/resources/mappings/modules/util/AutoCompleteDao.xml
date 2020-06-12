@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fy.erp.modules.util.dao.AutoCompleteDao">
+
+
+    <select id="findAutoCompleteList" parameterType="string" resultType="AutoComplete">
+        SELECT
+            [value],
+            [data]
+        FROM ${viewName} a
+    </select>
+
+    <select id="findSelectList" parameterType="string" resultType="map">
+        SELECT
+            [data]  AS id,
+            ''      AS pId,
+            ''      AS pIds,
+            [value] AS name
+        FROM ${viewName}
+    </select>
+
+    <select id="findCustomerByUser" resultType="map">
+        SELECT
+            [ec].[id]                                   AS [id],
+            ''                                          AS pId,
+            ''                                          AS pIds,
+            CONCAT([ec].[aname], ' - ', [ec].[company]) AS [name]
+        FROM erp_customer ec
+        WHERE ec.id_sys_user = #{user.id}
+    </select>
+
+
+</mapper>

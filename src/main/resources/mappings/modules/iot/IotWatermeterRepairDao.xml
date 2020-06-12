@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="com.fy.erp.modules.iot.dao.IotWatermeterRepairDao">
+    
+	<sql id="iotWatermeterRepairColumns">
+        		a.id AS "id",
+		a.watermeter_num_new AS "watermeterNumNew",
+		a.watermeter_num_old AS "watermeterNumOld",
+		a.count_old AS "countOld",
+		a.repair_by AS "repairBy.id",
+		a.repair_time AS "repairTime",
+		a.repair_type AS "repairType",
+		a.repair_photo AS "repairPhoto",
+		a.fault_type AS "faultType",
+		a.repair_desc AS "repairDesc",
+		a.fault_desc AS "faultDesc",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.watermeter_num_for_select AS "watermeterNumForSelect",
+		su.name AS "repairBy.name"
+	</sql>
+	
+	<sql id="iotWatermeterRepairJoins">
+        LEFT JOIN sys_user su ON su.id = a.repair_by
+	</sql>
+    
+	<select id="get" resultType="IotWatermeterRepair">
+		SELECT 
+			<include refid="iotWatermeterRepairColumns"/>
+		FROM iot_watermeter_repair a
+		<include refid="iotWatermeterRepairJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IotWatermeterRepair">
+		SELECT 
+			<include refid="iotWatermeterRepairColumns"/>
+		FROM iot_watermeter_repair a
+		<include refid="iotWatermeterRepairJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+            AND a.watermeter_num_for_select = #{watermeterNumForSelect}
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IotWatermeterRepair">
+		SELECT 
+			<include refid="iotWatermeterRepairColumns"/>
+		FROM iot_watermeter_repair a
+		<include refid="iotWatermeterRepairJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+    <insert id="insertSelective">
+        INSERT INTO iot_watermeter_repair
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+                  <if test="id != null">
+                    id,
+                  </if>
+                  <if test="watermeter_num_new != null">
+                    watermeter_num_new,
+                  </if>
+                  <if test="watermeter_num_old != null">
+                    watermeter_num_old,
+                  </if>
+                  <if test="count_old != null">
+                    count_old,
+                  </if>
+                  <if test="repair_by != null">
+                    repair_by,
+                  </if>
+                  <if test="repair_time != null">
+                    repair_time,
+                  </if>
+                  <if test="repair_type != null">
+                    repair_type,
+                  </if>
+                  <if test="repair_photo != null">
+                    repair_photo,
+                  </if>
+                  <if test="fault_type != null">
+                    fault_type,
+                  </if>
+                  <if test="repair_desc != null">
+                    repair_desc,
+                  </if>
+                  <if test="fault_desc != null">
+                    fault_desc,
+                  </if>
+                  <if test="create_by != null">
+                    create_by,
+                  </if>
+                  <if test="create_date != null">
+                    create_date,
+                  </if>
+                  <if test="update_by != null">
+                    update_by,
+                  </if>
+                  <if test="update_date != null">
+                    update_date,
+                  </if>
+                  <if test="remarks != null">
+                    remarks,
+                  </if>
+                  <if test="del_flag != null">
+                    del_flag,
+                  </if>
+                  <if test="watermeter_num_for_select != null">
+                    watermeter_num_for_select,
+                  </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+                  <if test="id != null" >
+                    #{id},
+                  </if>
+                  <if test="watermeterNumNew != null" >
+                    #{watermeterNumNew},
+                  </if>
+                  <if test="watermeterNumOld != null" >
+                    #{watermeterNumOld},
+                  </if>
+                  <if test="countOld != null" >
+                    #{countOld},
+                  </if>
+                  <if test="repairBy.id != null" >
+                    #{repairBy.id},
+                  </if>
+                  <if test="repairTime != null" >
+                    #{repairTime},
+                  </if>
+                  <if test="repairType != null" >
+                    #{repairType},
+                  </if>
+                  <if test="repairPhoto != null" >
+                    #{repairPhoto},
+                  </if>
+                  <if test="faultType != null" >
+                    #{faultType},
+                  </if>
+                  <if test="repairDesc != null" >
+                    #{repairDesc},
+                  </if>
+                  <if test="faultDesc != null" >
+                    #{faultDesc},
+                  </if>
+                  <if test="createBy.id != null" >
+                    #{createBy.id},
+                  </if>
+                  <if test="createDate != null" >
+                    #{createDate},
+                  </if>
+                  <if test="updateBy.id != null" >
+                    #{updateBy.id},
+                  </if>
+                  <if test="updateDate != null" >
+                    #{updateDate},
+                  </if>
+                  <if test="remarks != null" >
+                    #{remarks},
+                  </if>
+                  <if test="delFlag != null" >
+                    #{delFlag},
+                  </if>
+                  <if test="watermeterNumForSelect != null" >
+                    #{watermeterNumForSelect},
+                  </if>
+        </trim>
+    </insert>
+
+     <update id="updateSelective">
+        UPDATE iot_watermeter_repair
+        <set>
+                          <if test="watermeter_num_new != null" >
+                                    watermeter_num_new = #{watermeterNumNew},
+                          </if>
+                          <if test="watermeter_num_old != null" >
+                                    watermeter_num_old = #{watermeterNumOld},
+                          </if>
+                          <if test="count_old != null" >
+                                    count_old = #{countOld},
+                          </if>
+                          <if test="repair_by != null" >
+                                    repair_by = #{repairBy.id},
+                          </if>
+                          <if test="repair_time != null" >
+                                    repair_time = #{repairTime},
+                          </if>
+                          <if test="repair_type != null" >
+                                    repair_type = #{repairType},
+                          </if>
+                          <if test="repair_photo != null" >
+                                    repair_photo = #{repairPhoto},
+                          </if>
+                          <if test="fault_type != null" >
+                                    fault_type = #{faultType},
+                          </if>
+                          <if test="repair_desc != null" >
+                                    repair_desc = #{repairDesc},
+                          </if>
+                          <if test="fault_desc != null" >
+                                    fault_desc = #{faultDesc},
+                          </if>
+                          <if test="update_by != null" >
+                                    update_by = #{updateBy.id},
+                          </if>
+                          <if test="update_date != null" >
+                                    update_date = #{updateDate},
+                          </if>
+                          <if test="remarks != null" >
+                                    remarks = #{remarks},
+                          </if>
+                          <if test="watermeter_num_for_select != null" >
+                                    watermeter_num_for_select = #{watermeterNumForSelect},
+                          </if>
+        </set>
+        WHERE id = #{id}
+      </update>
+
+
+	<insert id="insert">
+		INSERT INTO iot_watermeter_repair(
+                        id,
+                watermeter_num_new,
+                watermeter_num_old,
+                count_old,
+                repair_by,
+                repair_time,
+                repair_type,
+                repair_photo,
+                fault_type,
+                repair_desc,
+                fault_desc,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                del_flag,
+                watermeter_num_for_select
+		) VALUES (
+                        #{id},
+                #{watermeterNumNew},
+                #{watermeterNumOld},
+                #{countOld},
+                #{repairBy.id},
+                #{repairTime},
+                #{repairType},
+                #{repairPhoto},
+                #{faultType},
+                #{repairDesc},
+                #{faultDesc},
+                #{createBy.id},
+                #{createDate},
+                #{updateBy.id},
+                #{updateDate},
+                #{remarks},
+                #{delFlag},
+                #{watermeterNumForSelect}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE iot_watermeter_repair SET 	
+                        watermeter_num_new = #{watermeterNumNew},
+                watermeter_num_old = #{watermeterNumOld},
+                count_old = #{countOld},
+                repair_by = #{repairBy.id},
+                repair_time = #{repairTime},
+                repair_type = #{repairType},
+                repair_photo = #{repairPhoto},
+                fault_type = #{faultType},
+                repair_desc = #{repairDesc},
+                fault_desc = #{faultDesc},
+                update_by = #{updateBy.id},
+                update_date = #{updateDate},
+                remarks = #{remarks},
+                watermeter_num_for_select = #{watermeterNumForSelect}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE iot_watermeter_repair SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!--  ======================================================================================== -->
+
+</mapper>

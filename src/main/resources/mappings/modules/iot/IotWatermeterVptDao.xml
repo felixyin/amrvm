@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="com.fy.erp.modules.iot.dao.IotWatermeterVptDao">
+    
+	<sql id="iotWatermeterVptColumns">
+        		a.id AS "id",
+		a.min_flow AS "minFlow",
+		a.max_flow AS "maxFlow",
+		a.date_name AS "dateName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="iotWatermeterVptJoins">
+	</sql>
+    
+	<select id="get" resultType="IotWatermeterVpt">
+		SELECT 
+			<include refid="iotWatermeterVptColumns"/>
+		FROM iot_watermeter_vpt a
+		<include refid="iotWatermeterVptJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IotWatermeterVpt">
+		SELECT 
+			<include refid="iotWatermeterVptColumns"/>
+		FROM iot_watermeter_vpt a
+		<include refid="iotWatermeterVptJoins"/>
+		<where>
+            1=1
+			<if test="minFlow != null and minFlow != ''">
+				AND a.min_flow = #{minFlow}
+			</if>
+			<if test="maxFlow != null and maxFlow != ''">
+				AND a.max_flow = #{maxFlow}
+			</if>
+			<if test="dateName != null and dateName != ''">
+				AND a.date_name = #{dateName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+	<select id="findAllList" resultType="IotWatermeterVpt">
+		SELECT
+			<include refid="iotWatermeterVptColumns"/>
+		FROM iot_watermeter_vpt a
+		<include refid="iotWatermeterVptJoins"/>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+    <insert id="insertSelective">
+        INSERT INTO iot_watermeter_vpt
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+                  <if test="id != null">
+                    id,
+                  </if>
+                  <if test="min_flow != null">
+                    min_flow,
+                  </if>
+                  <if test="max_flow != null">
+                    max_flow,
+                  </if>
+                  <if test="date_name != null">
+                    date_name,
+                  </if>
+                  <if test="create_by != null">
+                    create_by,
+                  </if>
+                  <if test="create_date != null">
+                    create_date,
+                  </if>
+                  <if test="update_by != null">
+                    update_by,
+                  </if>
+                  <if test="update_date != null">
+                    update_date,
+                  </if>
+                  <if test="remarks != null">
+                    remarks,
+                  </if>
+                  <if test="del_flag != null">
+                    del_flag,
+                  </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+                  <if test="id != null" >
+                    #{id},
+                  </if>
+                  <if test="minFlow != null" >
+                    #{minFlow},
+                  </if>
+                  <if test="maxFlow != null" >
+                    #{maxFlow},
+                  </if>
+                  <if test="dateName != null" >
+                    #{dateName},
+                  </if>
+                  <if test="createBy.id != null" >
+                    #{createBy.id},
+                  </if>
+                  <if test="createDate != null" >
+                    #{createDate},
+                  </if>
+                  <if test="updateBy.id != null" >
+                    #{updateBy.id},
+                  </if>
+                  <if test="updateDate != null" >
+                    #{updateDate},
+                  </if>
+                  <if test="remarks != null" >
+                    #{remarks},
+                  </if>
+                  <if test="delFlag != null" >
+                    #{delFlag},
+                  </if>
+        </trim>
+    </insert>
+
+     <update id="updateSelective">
+        UPDATE iot_watermeter_vpt
+        <set>
+                          <if test="min_flow != null" >
+                                    min_flow = #{minFlow},
+                          </if>
+                          <if test="max_flow != null" >
+                                    max_flow = #{maxFlow},
+                          </if>
+                          <if test="date_name != null" >
+                                    date_name = #{dateName},
+                          </if>
+                          <if test="remarks != null" >
+                                    remarks = #{remarks},
+                          </if>
+                          <if test="del_flag != null" >
+                                    del_flag = #{delFlag},
+                          </if>
+        </set>
+        WHERE id = #{id}
+      </update>
+
+
+	<insert id="insert">
+		INSERT INTO iot_watermeter_vpt(
+                        id,
+                min_flow,
+                max_flow,
+                date_name,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                del_flag
+		) VALUES (
+                        #{id},
+                #{minFlow},
+                #{maxFlow},
+                #{dateName},
+                #{createBy.id},
+                #{createDate},
+                #{updateBy.id},
+                #{updateDate},
+                #{remarks},
+                #{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE iot_watermeter_vpt SET 	
+                        min_flow = #{minFlow},
+                max_flow = #{maxFlow},
+                date_name = #{dateName},
+                remarks = #{remarks},
+                del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE iot_watermeter_vpt SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!--  ======================================================================================== -->
+
+</mapper>

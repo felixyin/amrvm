@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="com.fy.erp.modules.iot.dao.IotVideoMonitorDao">
+    
+	<sql id="iotVideoMonitorColumns">
+        a.id AS "id",
+		a.farm_id AS "office.id",
+        o.name AS "office.name",
+		a.account AS "account",
+		a.password AS "password",
+		a.ip AS "ip",
+		a.device_port AS "devicePort",
+		a.http_port AS "httpPort",
+		a.window_count AS "windowCount",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="iotVideoMonitorJoins">
+		LEFT JOIN sys_user u11 ON u11.id = a.update_by
+        LEFT JOIN sys_office o ON o.id = u11.company_id
+	</sql>
+    
+	<select id="get" resultType="IotVideoMonitor">
+		SELECT 
+			<include refid="iotVideoMonitorColumns"/>
+		FROM iot_video_monitor a
+		<include refid="iotVideoMonitorJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IotVideoMonitor">
+		SELECT 
+			<include refid="iotVideoMonitorColumns"/>
+		FROM iot_video_monitor a
+		<include refid="iotVideoMonitorJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.farm_id = #{office.id}
+			</if>
+			<if test="account != null and account != ''">
+				AND a.account LIKE 
+					<if test="dbName == 'oracle'">'%'||#{account}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{account}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{account},'%')</if>
+			</if>
+			<if test="ip != null and ip != ''">
+				AND a.ip LIKE 
+					<if test="dbName == 'oracle'">'%'||#{ip}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{ip}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{ip},'%')</if>
+			</if>
+			<if test="devicePort != null and devicePort != ''">
+				AND a.device_port LIKE 
+					<if test="dbName == 'oracle'">'%'||#{devicePort}</if>
+					<if test="dbName == 'mssql'">'%'+#{devicePort}</if>
+					<if test="dbName == 'mysql'">concat('%',#{devicePort})</if>
+			</if>
+			<if test="httpPort != null and httpPort != ''">
+				AND a.http_port LIKE 
+					<if test="dbName == 'oracle'">'%'||#{httpPort}</if>
+					<if test="dbName == 'mssql'">'%'+#{httpPort}</if>
+					<if test="dbName == 'mysql'">concat('%',#{httpPort})</if>
+			</if>
+			<if test="updateDate != null and updateDate != ''">
+				AND a.update_date = #{updateDate}
+			</if>
+			<if test="delFlag != null and delFlag != ''">
+				AND a.del_flag = #{delFlag}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="IotVideoMonitor">
+		SELECT 
+			<include refid="iotVideoMonitorColumns"/>
+		FROM iot_video_monitor a
+		<include refid="iotVideoMonitorJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+
+
+    <insert id="insertSelective">
+        INSERT INTO iot_video_monitor
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+                  <if test="id != null">
+                    id,
+                  </if>
+                  <if test="farm_id != null">
+                    farm_id,
+                  </if>
+                  <if test="account != null">
+                    account,
+                  </if>
+                  <if test="password != null">
+                    password,
+                  </if>
+                  <if test="ip != null">
+                    ip,
+                  </if>
+                  <if test="device_port != null">
+                    device_port,
+                  </if>
+                  <if test="http_port != null">
+                    http_port,
+                  </if>
+                  <if test="window_count != null">
+                    window_count,
+                  </if>
+                  <if test="create_by != null">
+                    create_by,
+                  </if>
+                  <if test="create_date != null">
+                    create_date,
+                  </if>
+                  <if test="update_by != null">
+                    update_by,
+                  </if>
+                  <if test="update_date != null">
+                    update_date,
+                  </if>
+                  <if test="remarks != null">
+                    remarks,
+                  </if>
+                  <if test="del_flag != null">
+                    del_flag,
+                  </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+                  <if test="id != null" >
+                    #{id},
+                  </if>
+                  <if test="office.id != null" >
+                    #{office.id},
+                  </if>
+                  <if test="account != null" >
+                    #{account},
+                  </if>
+                  <if test="password != null" >
+                    #{password},
+                  </if>
+                  <if test="ip != null" >
+                    #{ip},
+                  </if>
+                  <if test="devicePort != null" >
+                    #{devicePort},
+                  </if>
+                  <if test="httpPort != null" >
+                    #{httpPort},
+                  </if>
+                  <if test="windowCount != null" >
+                    #{windowCount},
+                  </if>
+                  <if test="createBy.id != null" >
+                    #{createBy.id},
+                  </if>
+                  <if test="createDate != null" >
+                    #{createDate},
+                  </if>
+                  <if test="updateBy.id != null" >
+                    #{updateBy.id},
+                  </if>
+                  <if test="updateDate != null" >
+                    #{updateDate},
+                  </if>
+                  <if test="remarks != null" >
+                    #{remarks},
+                  </if>
+                  <if test="delFlag != null" >
+                    #{delFlag},
+                  </if>
+        </trim>
+    </insert>
+
+     <update id="updateSelective">
+        UPDATE iot_video_monitor
+        <set>
+                          <if test="farm_id != null" >
+                                    farm_id = #{office.id},
+                          </if>
+                          <if test="account != null" >
+                                    account = #{account},
+                          </if>
+                          <if test="password != null" >
+                                    password = #{password},
+                          </if>
+                          <if test="ip != null" >
+                                    ip = #{ip},
+                          </if>
+                          <if test="device_port != null" >
+                                    device_port = #{devicePort},
+                          </if>
+                          <if test="http_port != null" >
+                                    http_port = #{httpPort},
+                          </if>
+                          <if test="window_count != null" >
+                                    window_count = #{windowCount},
+                          </if>
+                          <if test="update_by != null" >
+                                    update_by = #{updateBy.id},
+                          </if>
+                          <if test="update_date != null" >
+                                    update_date = #{updateDate},
+                          </if>
+                          <if test="remarks != null" >
+                                    remarks = #{remarks},
+                          </if>
+        </set>
+        WHERE id = #{id}
+      </update>
+
+
+	<insert id="insert">
+		INSERT INTO iot_video_monitor(
+                        id,
+                farm_id,
+                account,
+                password,
+                ip,
+                device_port,
+                http_port,
+                window_count,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                del_flag
+		) VALUES (
+                        #{id},
+                #{office.id},
+                #{account},
+                #{password},
+                #{ip},
+                #{devicePort},
+                #{httpPort},
+                #{windowCount},
+                #{createBy.id},
+                #{createDate},
+                #{updateBy.id},
+                #{updateDate},
+                #{remarks},
+                #{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE iot_video_monitor SET 	
+                        farm_id = #{office.id},
+                account = #{account},
+                password = #{password},
+                ip = #{ip},
+                device_port = #{devicePort},
+                http_port = #{httpPort},
+                window_count = #{windowCount},
+                update_by = #{updateBy.id},
+                update_date = #{updateDate},
+                remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE iot_video_monitor SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!--  ======================================================================================== -->
+
+</mapper>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        <mapper namespace="com.fy.erp.modules.iot.dao.IotWatermeterUserDao">
+    
+	<sql id="iotWatermeterUserColumns">
+        DISTINCT
+		a.user_id AS "user.id",
+		u2.name AS "user.name"
+	</sql>
+	
+	<sql id="iotWatermeterUserJoins">
+		LEFT JOIN sys_user u2 ON u2.id = a.user_id
+	</sql>
+    
+	<select id="get" resultType="IotWatermeterUser">
+		SELECT
+        a.user_id AS "user.id",
+        a.remarks AS "remarks",
+        a.iot_watermeter_id AS "iotWatermeter.id",
+        u2.name AS "user.name",
+        iw.name AS "iotWatermeter.name"
+		FROM iot_watermeter_user a
+        LEFT JOIN sys_user u2 ON u2.id = a.user_id
+        LEFT JOIN iot_watermeter iw ON iw.id = a.iot_watermeter_id
+		WHERE a.user_id = #{id}
+	</select>
+	
+	<select id="findList" resultType="IotWatermeterUser">
+        SELECT
+        a.user_id AS "user.id",
+        a.remarks AS "remarks",
+        a.iot_watermeter_id AS "iotWatermeter.id",
+        u2.name AS "user.name",
+        iw.name AS "iotWatermeter.name"
+        FROM iot_watermeter_user a
+        LEFT JOIN sys_user u2 ON u2.id = a.user_id
+        LEFT JOIN iot_watermeter iw ON iw.id = a.iot_watermeter_id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="user.id != null" >
+            AND a.user_id = #{user.id}
+        </if>
+        ORDER BY a.update_date DESC
+	</select>
+	
+	<select id="findAllList" resultType="IotWatermeterUser">
+        SELECT
+        a.user_id AS "user.id",
+        a.remarks AS "remarks",
+        a.iot_watermeter_id AS "iotWatermeter.id",
+        u2.name AS "user.name",
+        iw.name AS "iotWatermeter.name"
+        FROM iot_watermeter_user a
+        LEFT JOIN sys_user u2 ON u2.id = a.user_id
+        LEFT JOIN iot_watermeter iw ON iw.id = a.iot_watermeter_id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="user.id != null" >
+            AND a.user_id = #{user.id}
+        </if>
+        ORDER BY a.update_date DESC
+	</select>
+
+
+    <insert id="insertSelective">
+        INSERT INTO iot_watermeter_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+                  <if test="id != null">
+                    id,
+                  </if>
+                  <if test="user_id != null">
+                    user_id,
+                  </if>
+                  <if test="iot_watermeter_id != null">
+                    iot_watermeter_id,
+                  </if>
+                  <if test="create_by != null">
+                    create_by,
+                  </if>
+                  <if test="create_date != null">
+                    create_date,
+                  </if>
+                  <if test="update_by != null">
+                    update_by,
+                  </if>
+                  <if test="update_date != null">
+                    update_date,
+                  </if>
+                  <if test="remarks != null">
+                    remarks,
+                  </if>
+                  <if test="del_flag != null">
+                    del_flag,
+                  </if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides="," >
+                  <if test="id != null" >
+                    #{id},
+                  </if>
+                  <if test="user.id != null" >
+                    #{user.id},
+                  </if>
+                  <if test="iotWatermeterId != null" >
+                    #{iotWatermeter.id},
+                  </if>
+                  <if test="createBy.id != null" >
+                    #{createBy.id},
+                  </if>
+                  <if test="createDate != null" >
+                    #{createDate},
+                  </if>
+                  <if test="updateBy.id != null" >
+                    #{updateBy.id},
+                  </if>
+                  <if test="updateDate != null" >
+                    #{updateDate},
+                  </if>
+                  <if test="remarks != null" >
+                    #{remarks},
+                  </if>
+                  <if test="delFlag != null" >
+                    #{delFlag},
+                  </if>
+        </trim>
+    </insert>
+
+     <update id="updateSelective">
+        UPDATE iot_watermeter_user
+        <set>
+                          <if test="user_id != null" >
+                                    user_id = #{user.id},
+                          </if>
+                          <if test="iot_watermeter_id != null" >
+                                    iot_watermeter_id = #{iotWatermeter.id},
+                          </if>
+                          <if test="update_by != null" >
+                                    update_by = #{updateBy.id},
+                          </if>
+                          <if test="update_date != null" >
+                                    update_date = #{updateDate},
+                          </if>
+                          <if test="remarks != null" >
+                                    remarks = #{remarks},
+                          </if>
+        </set>
+        WHERE id = #{id}
+      </update>
+
+
+	<insert id="insert">
+		INSERT INTO iot_watermeter_user(
+                        id,
+                user_id,
+                iot_watermeter_id,
+                create_by,
+                create_date,
+                update_by,
+                update_date,
+                remarks,
+                del_flag
+		) VALUES (
+                        #{id},
+                #{user.id},
+                #{iotWatermeter.id},
+                #{createBy.id},
+                #{createDate},
+                #{updateBy.id},
+                #{updateDate},
+                #{remarks},
+                #{delFlag}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE iot_watermeter_user SET 	
+                        user_id = #{user.id},
+                iot_watermeter_id = #{iotWatermeter.id},
+                update_by = #{updateBy.id},
+                update_date = #{updateDate},
+                remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		UPDATE iot_watermeter_user SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+
+	<!--  ======================================================================================== -->
+
+    <delete id="deleteByUser">
+        DELETE FROM iot_watermeter_user WHERE user_id = #{id}
+    </delete>
+
+    <select id="getIotWatermeterUserByUser" resultType="IotWatermeterUser">
+        SELECT
+        <include refid="iotWatermeterUserColumns"/>
+        FROM iot_watermeter_user a
+        <include refid="iotWatermeterUserJoins"/>
+        WHERE a.user_id = #{user.id}
+    </select>
+
+    <select id="findListByUserAndLeaf" resultType="IotWatermeterUser">
+        SELECT
+        a.user_id AS "user.id",
+        a.remarks AS "remarks",
+        a.iot_watermeter_id AS "iotWatermeter.id",
+        u2.name AS "user.name",
+        iw.name AS "iotWatermeter.name"
+        FROM iot_watermeter_user a
+        LEFT JOIN sys_user u2 ON u2.id = a.user_id
+        LEFT JOIN iot_watermeter iw ON iw.id = a.iot_watermeter_id
+        WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+        <if test="user.id != null" >
+            AND a.user_id = #{user.id}
+        </if>
+        AND a.remarks = '1'
+        ORDER BY a.update_date DESC
+    </select>
+
+</mapper>

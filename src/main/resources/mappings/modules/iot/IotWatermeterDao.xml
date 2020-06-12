@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fy.erp.modules.iot.dao.IotWatermeterDao">
+
+	<sql id="iotWatermeterColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.area_id AS "office.id",
+		a.farm_name AS "farmName",
+		a.concentrator_name AS "concentratorName",
+		a.concentrator_num AS "concentratorNum",
+		a.house_name AS "houseName",
+		a.room_name AS "roomName",
+		a.watermeter_type AS "watermeterType",
+		a.watermeter_num AS "watermeterNum",
+		a.device_type AS "deviceType",
+		a.watermeter_status AS "watermeterStatus",
+		a.installed_time AS "installedTime",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.order_no AS "orderNo",
+		a.parent_id AS "parent.id",
+		a.level_type AS "levelType",
+		a.parent_ids AS "parentIds",
+		a.sort AS "sort",
+		a3.name AS "office.name"
+	</sql>
+
+
+
+	<sql id="iotWatermeterJoins">
+		LEFT JOIN sys_office a3 ON a3.id = a.area_id
+	</sql>
+
+	<select id="get" resultType="IotWatermeter">
+		SELECT
+			<include refid="iotWatermeterColumns"/>
+		FROM iot_watermeter a
+		<include refid="iotWatermeterJoins"/>
+		WHERE a.id = #{id}
+	</select>
+
+	<select id="findAllList" resultType="IotWatermeter">
+		SELECT
+			<include refid="iotWatermeterColumns"/>
+		FROM iot_watermeter a
+		<include refid="iotWatermeterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>
+		ORDER BY a.order_no ASC
+	</select>
+
+	<select id="findByParentIdsLike" resultType="IotWatermeter">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM iot_watermeter a
+		<include refid="iotWatermeterJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			AND a.parent_ids LIKE #{parentIds}
+		</where>
+		ORDER BY a.order_no ASC
+	</select>
+
+	<insert id="insert">
+		INSERT INTO iot_watermeter(
+			id,
+			name,
+			area_id,
+			farm_name,
+			concentrator_name,
+			concentrator_num,
+			house_name,
+			room_name,
+			watermeter_type,
+			watermeter_num,
+			device_type,
+			watermeter_status,
+			installed_time,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			order_no,
+			parent_id,
+			level_type,
+			parent_ids
+		) VALUES (
+			#{id},
+			#{name},
+			#{office.id},
+			#{farmName},
+			#{concentratorName},
+			#{concentratorNum},
+			#{houseName},
+			#{roomName},
+			#{watermeterType},
+			#{watermeterNum},
+			#{deviceType},
+			#{watermeterStatus},
+			#{installedTime},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{orderNo},
+			#{parent.id},
+			#{levelType},
+			#{parentIds}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE iot_watermeter SET
+			name = #{name},
+			area_id = #{office.id},
+			farm_name = #{farmName},
+			concentrator_name = #{concentratorName},
+			concentrator_num = #{concentratorNum},
+			house_name = #{houseName},
+			room_name = #{roomName},
+			watermeter_type = #{watermeterType},
+			watermeter_num = #{watermeterNum},
+			device_type = #{deviceType},
+			watermeter_status = #{watermeterStatus},
+			installed_time = #{installedTime},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			order_no = #{orderNo},
+			parent_id = #{parent.id},
+			level_type = #{levelType},
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateParentIds">
+		UPDATE iot_watermeter SET
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE iot_watermeter SET
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id} OR parent_ids LIKE '%,'||#{id}||',%'
+	</update>
+
+	<!--  ======================================================================================== -->
+
+	<select id="findList" resultType="IotWatermeter">
+		SELECT
+		<include refid="iotWatermeterColumns"/>
+		FROM iot_watermeter a
+		<include refid="iotWatermeterJoins"/>
+	</select>
+
+	<select id="findParentIdsByIds"  resultType="string">
+		SELECT DISTINCT
+			iw.parent_ids as parent_ids
+		FROM  iot_watermeter iw
+		WHERE
+			iw.id in (${ids})
+	</select>
+
+
+	<select id="findNewWatermeterFromSqlServer" resultType="IotWatermeter">
+		SELECT * FROM v_watermeter ORDER BY room_name    COLLATE Chinese_PRC_Stroke_CS_AS_KS_WS   ASC
+	</select>
+
+	<select id="findWatermeterList" resultType="IotWatermeter">
+		SELECT
+		<include refid="iotWatermeterColumns"/>
+		FROM iot_watermeter a
+		<include refid="iotWatermeterJoins"/>
+		<!-- 数据范围过滤 -->
+		<if test="sqlMap.dsf != null and sqlMap.dsf != ''">
+			LEFT JOIN iot_watermeter_user iwu ON iwu.iot_watermeter_id = a.id
+		</if>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<!-- 数据范围过滤 -->
+			<if test="sqlMap.dsf != null and sqlMap.dsf != ''">
+				AND iwu.user_id = '${sqlMap.dsf}'
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE
+				<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="office != null and office.id != null and office.id != ''">
+				AND a.area_id = #{office.id}
+			</if>
+			<if test="concentratorNum != null and concentratorNum != ''">
+				AND a.concentrator_num LIKE
+				<if test="dbName == 'oracle'">'%'||#{concentratorNum}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{concentratorNum}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{concentratorNum},'%')</if>
+			</if>
+			<if test="watermeterType != null and watermeterType != ''">
+				AND a.watermeter_type = #{watermeterType}
+			</if>
+			<if test="watermeterNum != null and watermeterNum != ''">
+				AND a.watermeter_num LIKE
+				<if test="dbName == 'oracle'">'%'||#{watermeterNum}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{watermeterNum}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{watermeterNum},'%')</if>
+			</if>
+			<if test="deviceType != null and deviceType != ''">
+				AND a.device_type = #{deviceType}
+			</if>
+			<if test="watermeterStatus != null and watermeterStatus != ''">
+				AND a.watermeter_status = #{watermeterStatus}
+			</if>
+			<if test="parent != null and parent.id != null and parent.id != ''">
+				AND a.parent_id = #{parent.id}
+			</if>
+			<if test="parentIds != null and parentIds != ''">
+				AND a.parent_ids LIKE
+				<if test="dbName == 'oracle'">'%'||#{parentIds}||'%'</if>
+				<if test="dbName == 'mssql'">'%'+#{parentIds}+'%'</if>
+				<if test="dbName == 'mysql'">concat('%',#{parentIds},'%')</if>
+			</if>
+			AND a.level_type = 3
+		</where>
+		ORDER BY a.order_no ASC
+	</select>
+
+	<delete id="deleteAll">
+		DELETE FROM iot_watermeter
+	</delete>
+
+	<update id="updateOrderNo">
+		UPDATE iot_watermeter  SET order_no = #{orderNo} WHERE id = #{id}
+	</update>
+
+	<select id="findAllOrderNo" resultType="IotWatermeter">
+		SELECT iw.id,iw.parent_id AS 'parent.id',iw.parent_ids,iw.watermeter_num, iw.order_no, iw.house_name  FROM iot_watermeter AS iw
+	</select>
+
+</mapper>

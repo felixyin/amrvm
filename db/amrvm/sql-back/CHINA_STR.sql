@@ -1,0 +1,8 @@
+ALTER FUNCTION DBO.CHINA_STR(@S NVARCHAR(100))
+  RETURNS VARCHAR(100)
+AS
+  BEGIN
+    WHILE PATINDEX('%[^吖-座]%', @S) > 0
+      SET @S = STUFF(@S, PATINDEX('%[^吖-座]%', @S), 1, N'')
+    RETURN @S
+  END
